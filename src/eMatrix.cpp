@@ -2,7 +2,7 @@
 #include <iostream>
 #include <math.h>
 #include <time.h>
-#include "eMath.hpp"
+#include <eMath.hpp>
 
 using namespace std;
 

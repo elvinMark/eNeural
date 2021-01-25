@@ -1,7 +1,7 @@
 #include <iostream>
 #include <math.h>
-#include "eMath.hpp"
-#include "eNeural.hpp"
+#include <eMath.hpp>
+#include <eNeural.hpp>
 
 using namespace std;
 using namespace emath;
@@ -19,7 +19,7 @@ eMatrix* enn::eSoftmax::backward(eMatrix* err){
   eMatrix* tmp;
   this->tmp_err = err;
   tmp = err->times(this->tmp_out);
-  return tmp->minus(this->tmp_out->times(tmp));
+  return tmp->minus(this->tmp_out->times(tmp->sum(0)));
 }
 
 void enn::eSoftmax::update(double learing_rate){

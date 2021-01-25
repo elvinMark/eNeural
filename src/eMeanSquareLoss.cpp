@@ -1,6 +1,6 @@
 #include <iostream>
-#include "eMath.hpp"
-#include "eNeural.hpp"
+#include <eMath.hpp>
+#include <eNeural.hpp>
 
 using namespace std;
 using namespace emath;

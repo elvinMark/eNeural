@@ -1,6 +1,6 @@
 #include <iostream>
-#include "eNeural.hpp"
-#include "eMath.hpp"
+#include <eNeural.hpp>
+#include <eMath.hpp>
 
 using namespace std;
 using namespace emath;
@@ -8,6 +8,7 @@ using namespace emath;
 enn::eLinear::eLinear(int num_inputs,int num_outputs){
   this->W = new eMatrix(num_inputs,num_outputs);
   this->b = new eMatrix(1,num_outputs);
+  srand (time(NULL));
   this->W->random();
   this->b->random();
 }
