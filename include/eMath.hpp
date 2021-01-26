@@ -50,7 +50,10 @@ emath::eMatrix operator / (const emath::eMatrix& m1, const double num);
 class emath::eTensor{
 public:
   std::vector<eMatrix*> mats;
+  eTensor();
   eTensor(int num_mats,int rows, int cols);
+  void random();
   emath::eTensor* conv(emath::eTensor* T);
-}
+  emath::eTensor* corr(emath::eTensor* T);
+};
 #endif

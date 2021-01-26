@@ -190,9 +190,9 @@ emath::eMatrix* emath::eMatrix::transpose(){
   return out;
 }
 
-emath::eMatrix* conv(emath::eMatrix* m1){
-  eMatrix* out;
-  out = new eMatrix(this->rows - m1->rows + 1, this->cols - m1->cols + 1);
+emath::eMatrix* emath::eMatrix::conv(emath::eMatrix* m1){
+  emath::eMatrix* out;
+  out = new emath::eMatrix(this->rows - m1->rows + 1, this->cols - m1->cols + 1);
   for(int i = 0;i<out->rows;i++){
     for(int j = 0;j<out->cols;j++){
     }
@@ -200,9 +200,9 @@ emath::eMatrix* conv(emath::eMatrix* m1){
   return out;
 }
 
-emath::eMatrix* corr(emath::eMatrix* m1){
-  eMatrix* out;
-  out = new eMatrix(this->rows + m1->rows - 1, this->cols + m1->cols - 1);
+emath::eMatrix* emath::eMatrix::corr(emath::eMatrix* m1){
+  emath::eMatrix* out;
+  out = new emath::eMatrix(this->rows + m1->rows - 1, this->cols + m1->cols - 1);
   for(int i = 0;i<out->rows;i++){
     for(int j = 0;j<out->cols;j++){
     }
