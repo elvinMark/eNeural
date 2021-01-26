@@ -190,6 +190,26 @@ emath::eMatrix* emath::eMatrix::transpose(){
   return out;
 }
 
+emath::eMatrix* conv(emath::eMatrix* m1){
+  eMatrix* out;
+  out = new eMatrix(this->rows - m1->rows + 1, this->cols - m1->cols + 1);
+  for(int i = 0;i<out->rows;i++){
+    for(int j = 0;j<out->cols;j++){
+    }
+  }
+  return out;
+}
+
+emath::eMatrix* corr(emath::eMatrix* m1){
+  eMatrix* out;
+  out = new eMatrix(this->rows + m1->rows - 1, this->cols + m1->cols - 1);
+  for(int i = 0;i<out->rows;i++){
+    for(int j = 0;j<out->cols;j++){
+    }
+  }
+  return out;
+}
+
 ostream& operator<<(ostream& os,const emath::eMatrix* m){
   int tmp;
   for(int i = 0;i<m->rows;i++){
