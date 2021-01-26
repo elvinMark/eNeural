@@ -2,6 +2,7 @@
 #include <math.h>
 #include <eMath.hpp>
 #include <eNeural.hpp>
+#include <vector>
 
 using namespace std;
 using namespace emath;
@@ -9,58 +10,37 @@ using namespace enn;
 
 class myNN{
 public:
-  eLinear* fc1;
-  eReLU * sig1;
-  eLinear* fc2;
-  eReLU* sig2;
-  eLinear* fc3;
-  eReLU* sig3;
-  eSoftmax* soft;
+  std::vector<eLayer *> layers;
   myNN(){
-    fc1 = new eLinear(2,5);
-    sig1 = new eReLU();
-    fc2 = new eLinear(5,3);
-    sig2 = new eReLU();
-    fc3 = new eLinear(3,2);
-    sig3 = new eReLU();
-    soft = new eSoftmax();
+    layers.push_back(new eLinear(2,5));
+    layers.push_back(new eReLU());
+    layers.push_back(new eLinear(5,3));
+    layers.push_back(new eReLU());
+    layers.push_back(new eLinear(3,2));
+    layers.push_back(new eReLU());
+    layers.push_back(new eSoftmax());
   }
   eMatrix* forward(eMatrix* inp){
     eMatrix* tmp;
-    tmp = fc1->forward(inp);
-    tmp = sig1->forward(tmp);
-    tmp = fc2->forward(tmp);
-    tmp = sig2->forward(tmp);
-    tmp = fc3->forward(tmp);
-    tmp = sig3->forward(tmp);
-    tmp = soft->forward(tmp);
+    tmp = inp;
+    for(int i = 0;i<layers.size();i++)
+      tmp = layers[i]->forward(tmp);
     return tmp;
   }
   eMatrix* backward(eMatrix* err){
     eMatrix* tmp;
-    tmp = soft->backward(err);
-    tmp = sig3->backward(tmp);
-    tmp = fc3->backward(tmp);
-    tmp = sig2->backward(tmp);
-    tmp = fc2->backward(tmp);
-    tmp = sig1->backward(tmp);
-    tmp = fc1->backward(tmp);
+    tmp = err;
+    for(int i = layers.size() - 1;i>=0;i--)
+      tmp = layers[i]->backward(tmp);
     return tmp;
   }
   void update(double learning_rate){
-    fc1->update(learning_rate);
-    sig1->update(learning_rate);
-    fc2->update(learning_rate);
-    sig2->update(learning_rate);
-    fc3->update(learning_rate);
-    sig3->update(learning_rate);
-    soft->update(learning_rate);
+    for(int i = 0;i<layers.size();i++)
+      layers[i]->update(learning_rate);
   }
-  void train(eMatrix* inp,eMatrix* target,double learning_rate,int maxIt){
+  void train(eMatrix* inp,eMatrix* target,eLoss* loss, double learning_rate,int maxIt){
     eMatrix* tmp;
     double curr_loss;
-    //eMeanSquareLoss* loss = new eMeanSquareLoss();
-    eCrossEntropyLoss* loss = new eCrossEntropyLoss();
     for(int i = 0;i<maxIt;i++){
       tmp = forward(inp);
       curr_loss = loss->loss(tmp,target);
@@ -81,8 +61,7 @@ int  main(){
   out = new eMatrix(4,2);
   inp->data = in_data;
   out->data = out_data;
-  cout << nn->fc1 << endl;
   cout << nn->forward(inp) << endl;
-  nn->train(inp,out,0.1,500);
+  nn->train(inp,out,new eCrossEntropyLoss(),0.1,500);
   cout << nn->forward(inp) << endl;
 }
