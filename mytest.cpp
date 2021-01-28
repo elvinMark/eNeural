@@ -15,9 +15,15 @@ int  main(){
   eMLPClassifier* nn = new eMLPClassifier({2,5,3,2},enn::RELU);
   inp = new eMatrix(4,2);
   out = new eMatrix(4,2);
+  
   inp->data = in_data;
   out->data = out_data;
+  
   cout << nn->forward(inp) << endl;
-  nn->train(inp,out,0.1,500);
+  //nn->train(inp,out,0.1,500);
+  nn->load_model("test.bin");
   cout << nn->forward(inp) << endl;
+
+  //nn->save_model("test.bin");
+  
 }

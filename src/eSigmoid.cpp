@@ -28,3 +28,11 @@ eMatrix* enn::eSigmoid::backward(eMatrix* err){
 void enn::eSigmoid::update(double learing_rate){
 
 }
+
+void enn::eSigmoid::load(FILE* p){
+
+}
+
+void enn::eSigmoid::save(FILE* p){
+
+}

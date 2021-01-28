@@ -33,6 +33,8 @@ public:
   virtual  eMatrix* forward(eMatrix* inp) = 0;
   virtual  eMatrix* backward(eMatrix* err) = 0;
   virtual  void     update(double learing_rate) = 0;
+  virtual  void     load(FILE* p) = 0;
+  virtual  void     save(FILE* p) = 0;
 };
 
 class enn::eLinear : public enn::eLayer{
@@ -47,6 +49,8 @@ public:
   eMatrix* forward(eMatrix* inp);
   eMatrix* backward(eMatrix* err);
   void     update(double learing_rate);
+  void     load(FILE* p);
+  void     save(FILE* p);
 };
 
 class enn::eSigmoid : public enn::eLayer{
@@ -57,6 +61,8 @@ public:
   eMatrix* forward(eMatrix *inp);
   eMatrix* backward(eMatrix *err);
   void     update(double learning_rate);
+  void     load(FILE* p);
+  void     save(FILE* p);
 };
 
 class enn::eTanh : public enn::eLayer{
@@ -67,6 +73,8 @@ public:
   eMatrix* forward(eMatrix *inp);
   eMatrix* backward(eMatrix *err);
   void     update(double learning_rate);
+  void     load(FILE* p);
+  void     save(FILE* p);
 };
 
 class enn::eReLU : public enn::eLayer{
@@ -77,6 +85,8 @@ public:
   eMatrix* forward(eMatrix *inp);
   eMatrix* backward(eMatrix *err);
   void     update(double learning_rate);
+  void     load(FILE* p);
+  void     save(FILE* p);
 };
 
 class enn::eSoftmax : public enn::eLayer{
@@ -87,6 +97,8 @@ public:
   eMatrix* forward(eMatrix *inp);
   eMatrix* backward(eMatrix *err);
   void     update(double learning_rate);
+  void     load(FILE* p);
+  void     save(FILE* p);
 };
 
 class enn::eLoss{
@@ -115,6 +127,8 @@ public:
   virtual eMatrix* backward(eMatrix *err) = 0;
   virtual void     update(double learning_rate) = 0;
   virtual void     train(eMatrix* inp,eMatrix *out, eLoss *loss, double learning_rate, int maxIt) = 0;
+  virtual void     load_model(const char* dir) = 0;
+  virtual void     save_model(const char* dir) = 0;
 };
 
 class enn::eSequential : public enn::eModel{
@@ -125,6 +139,8 @@ public:
   eMatrix* backward(eMatrix *err);
   void     update(double learning_rate);
   void     train(eMatrix* inp,eMatrix *out, eLoss *loss, double learning_rate, int maxIt);
+  void     load_model(const char* dir);
+  void     save_model(const char* dir);
 };
 
 class enn::eMLPClassifier : public enn::eSequential{

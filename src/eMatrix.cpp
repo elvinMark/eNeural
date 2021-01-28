@@ -3,6 +3,8 @@
 #include <math.h>
 #include <time.h>
 #include <eMath.hpp>
+#include <stdio.h>
+#include <eUtils.h>
 
 using namespace std;
 
@@ -208,6 +210,15 @@ emath::eMatrix* emath::eMatrix::corr(emath::eMatrix* m1){
     }
   }
   return out;
+}
+
+void emath::eMatrix::load(FILE* p){
+  for(int i = 0;i<this->rows*this->cols;i++)
+    this->data[i] = get_next_value(p);
+}
+void emath::eMatrix::save(FILE* p){
+  for(int i = 0;i<this->rows*this->cols;i++)
+    fwrite(this->data + i,1,8,p);
 }
 
 ostream& operator<<(ostream& os,const emath::eMatrix* m){

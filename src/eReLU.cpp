@@ -28,3 +28,11 @@ eMatrix* enn::eReLU::backward(eMatrix* err){
 void enn::eReLU::update(double learing_rate){
 
 }
+
+void enn::eReLU::load(FILE* p){
+
+}
+
+void enn::eReLU::save(FILE* p){
+
+}

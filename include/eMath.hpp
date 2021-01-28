@@ -35,6 +35,8 @@ public:
   emath::eMatrix* applyFunc(double fun_f(double));
   emath::eMatrix* conv(emath::eMatrix* m1);
   emath::eMatrix* corr(emath::eMatrix* m1);
+  void            load(FILE* p);
+  void            save(FILE* p);
 };
 ostream& operator << (ostream& os,const emath::eMatrix* m);
 ostream& operator << (ostream& os,const emath::eMatrix& m);

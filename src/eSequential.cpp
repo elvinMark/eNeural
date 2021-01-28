@@ -3,6 +3,7 @@
 #include <math.h>
 #include <eMath.hpp>
 #include <eNeural.hpp>
+#include <stdio.h>
 
 using namespace std;
 using namespace emath;
@@ -40,4 +41,18 @@ void enn::eSequential::train(eMatrix* inp,eMatrix *out, eLoss *loss, double lear
     this->backward(loss->grad_loss());
     this->update(learning_rate);
   }
+}
+
+void enn::eSequential::save_model(const char* dir){
+  FILE* p = fopen(dir,"wb");
+  for(int i = 0;i<this->layers.size();i++)
+    this->layers[i]->save(p);
+  fclose(p);
+}
+
+void enn::eSequential::load_model(const char* dir){
+  FILE* p = fopen(dir,"rb");
+  for(int i = 0;i<this->layers.size();i++)
+    this->layers[i]->load(p);
+  fclose(p);
 }

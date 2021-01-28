@@ -1,6 +1,7 @@
 #include <iostream>
 #include <eNeural.hpp>
 #include <eMath.hpp>
+#include <stdio.h>
 
 using namespace std;
 using namespace emath;
@@ -30,6 +31,16 @@ void enn::eLinear::update(double learning_rate){
   this->W = this->W->minus(delta->times(learning_rate));
   delta = this->tmp_err->sum(1);
   this->b = this->b->minus(delta->times(learning_rate));
+}
+
+void enn::eLinear::load(FILE* p){
+  this->W->load(p);
+  this->b->load(p);
+}
+
+void enn::eLinear::save(FILE* p){
+  this->W->save(p);
+  this->b->save(p);
 }
 
 ostream& operator << (ostream& os,const enn::eLinear& nn){

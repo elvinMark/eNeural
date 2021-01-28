@@ -28,3 +28,11 @@ eMatrix* enn::eTanh::backward(eMatrix* err){
 void enn::eTanh::update(double learing_rate){
 
 }
+
+void enn::eTanh::load(FILE* p){
+
+}
+
+void enn::eTanh::save(FILE* p){
+
+}

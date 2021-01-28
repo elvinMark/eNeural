@@ -25,3 +25,11 @@ eMatrix* enn::eSoftmax::backward(eMatrix* err){
 void enn::eSoftmax::update(double learing_rate){
 
 }
+
+void enn::eSoftmax::load(FILE* p){
+
+}
+
+void enn::eSoftmax::save(FILE* p){
+
+}
