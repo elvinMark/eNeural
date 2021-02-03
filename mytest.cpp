@@ -20,7 +20,7 @@ int  main(){
   out->data = out_data;
   
   cout << nn->forward(inp) << endl;
-  //nn->train(inp,out,0.1,500);
+  nn->train(inp,out,0.1,500);
   nn->load_model("test.bin");
   cout << nn->forward(inp) << endl;
 
