@@ -260,7 +260,7 @@ function eReLU(){
     
     this.forward = function(inp){
 	this.tmp_i = inp;
-	this.tmp_o = inp.applyFunc((x)=>x>0?x:0.001*x);
+	this.tmp_o = inp.applyFunc((x)=>x>0?x:(0.001*x));
 	return this.tmp_o;
     };
     
@@ -365,6 +365,21 @@ function eSequential(){
     };
 }
 
+function generate_data(N){
+    var inp = new eMatrix(N,2);
+    var target = new eMatrix(N,2);
+    var m = Math.random();
+    var b = Math.random();
+    
+    inp.random();
+    inp = inp.applyFunc((x)=>5*x - 2.5);
+    for(var i = 0;i<N;i++){
+	target.data[i][0] = inp.data[i][1] > (m*inp.data[i][0]+b)?1:0;
+	target.data[i][1] = target.data[i][0]?0:1;
+    }
+    return {"inp":inp,"target":target};
+}
+
 var s = new eSequential();
 var inp,target;
 
@@ -374,12 +389,19 @@ target = new eMatrix(4,2);
 inp.data = [[0,0],[1,0],[0,1],[1,1]];
 target.data = [[1,0],[0,1],[0,1],[1,0]];
 
-s.addLayer(new eLinear(2,3));
-s.addLayer(new eSigmoid());
-s.addLayer(new eLinear(3,5));
+s.addLayer(new eLinear(2,5));
+s.addLayer(new eReLU());
+s.addLayer(new eLinear(5,5));
 s.addLayer(new eReLU());
 s.addLayer(new eLinear(5,2));
 s.addLayer(new eReLU());
 s.addLayer(new eSoftmax());
-s.train(inp,target,new eCrossEntropyLoss(),0.1,2000);
-console.log(s.forward(inp).toString());
+
+data = generate_data(20);
+
+s.train(data["inp"],data["target"],new eCrossEntropyLoss(),0.01,1000);
+console.log(s.forward(data["inp"]).toString());
+
+// s.train(inp,target,new eCrossEntropyLoss(),0.1,1000);
+// console.log(s.forward(inp).toString());
+
