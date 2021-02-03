@@ -1,3 +1,7 @@
+/////////////////////////////////////////
+//             Matrix                  //
+/////////////////////////////////////////
+
 function eMatrix(rows,cols){
     this.data = [];
     this.rows = rows;
@@ -180,6 +184,10 @@ function eMatrix(rows,cols){
     
 }
 
+/////////////////////////////////////////
+//             Layers                  //
+/////////////////////////////////////////
+
 function eLinear(num_in,num_out){
     this.W = new eMatrix(num_in,num_out);
     this.b = new eMatrix(1,num_out);
@@ -299,6 +307,36 @@ function eSoftmax(){
     };    
 }
 
+function eDropout(p){
+    this.tmp_o = null;
+    this.tmp_i = null;
+    this.tmp_e = null;
+    this.mask  = null;
+
+    this.p = p;
+    this.alpha = 1/(1 - p);
+    this.forward = function(inp){
+	this.tmp_i = inp;
+	this.mask = new eMatrix(inp.rows,inp.cols);
+	this.mask.random();
+	this.mask = this.mask.applyFunc((x)=>x>p?this.alpha:0);
+	this.tmp_o = this.mask.times(inp);
+	return this.tmp_o;
+    }
+
+    this.backward = function(err){
+	return this.mask.times(err);
+    }
+
+    this.update = function(learning_rate){
+	
+    }
+}
+
+/////////////////////////////////////////////////
+//             Loss Functions                  //
+/////////////////////////////////////////////////
+
 function eMeanSquareLoss(){
     this.err = null;
     
@@ -326,6 +364,10 @@ function eCrossEntropyLoss(){
 	return this.tmp_t.divides(this.tmp_o).scale(-1);
     };
 }
+
+/////////////////////////////////////////////////
+//             Models                          //
+/////////////////////////////////////////////////
 
 function eSequential(){
     this.layers = [];
@@ -365,6 +407,58 @@ function eSequential(){
     };
 }
 
+function eMLPClassifier(struct,act_fun){
+    this.layers = [];
+
+    for(var i = 0;i<struct.length - 1;i++){
+	this.layers.push(new eLinear(struct[i],struct[i+1]));
+	if(act_fun === "sigmoid")
+	    this.layers.push(new eSigmoid());
+	else if(act_fun === "tanh")
+	    this.layers.push(new eTanh());
+	else if(act_fun === "relu")
+	    this.layers.push(new eReLU());
+    }
+    
+    this.layers.push(new eSoftmax());
+
+    this.forward = function(inp){
+	var tmp = inp;
+	for(var i in this.layers)
+	    tmp = this.layers[i].forward(tmp);
+	return tmp;
+    };
+
+    this.backward = function(err){
+	var tmp = err;
+	for(var i = this.layers.length - 1;i>=0;i--)
+	    tmp = this.layers[i].backward(tmp);
+	return tmp;
+    };
+
+    this.update = function(learning_rate){
+	for(var i in this.layers)
+	    this.layers[i].update(learning_rate);
+    };
+
+    this.train = function(inp,target,learning_rate,epochs){
+	var tmp,err,curr_loss;
+	var loss = new eCrossEntropyLoss();
+	for(var i = 0;i<epochs;i++){
+	    tmp = this.forward(inp);
+	    curr_loss = loss.calculate_loss(tmp,target);
+	    console.log(curr_loss);
+	    this.backward(loss.grad_loss());
+	    this.update(learning_rate);
+	}
+    };
+}
+
+
+/////////////////////////////////////////////////
+//             Utils                           //
+/////////////////////////////////////////////////
+
 function generate_data(N){
     var inp = new eMatrix(N,2);
     var target = new eMatrix(N,2);
@@ -380,7 +474,8 @@ function generate_data(N){
     return {"inp":inp,"target":target};
 }
 
-var s = new eSequential();
+var s = new eMLPClassifier([2,5,3,2],"relu");
+
 var inp,target;
 
 inp = new eMatrix(4,2);
@@ -389,17 +484,9 @@ target = new eMatrix(4,2);
 inp.data = [[0,0],[1,0],[0,1],[1,1]];
 target.data = [[1,0],[0,1],[0,1],[1,0]];
 
-s.addLayer(new eLinear(2,5));
-s.addLayer(new eReLU());
-s.addLayer(new eLinear(5,5));
-s.addLayer(new eReLU());
-s.addLayer(new eLinear(5,2));
-s.addLayer(new eReLU());
-s.addLayer(new eSoftmax());
-
 data = generate_data(20);
 
-s.train(data["inp"],data["target"],new eCrossEntropyLoss(),0.01,1000);
+s.train(data["inp"],data["target"],0.01,1000);
 console.log(s.forward(data["inp"]).toString());
 
 // s.train(inp,target,new eCrossEntropyLoss(),0.1,1000);

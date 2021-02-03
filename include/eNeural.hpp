@@ -18,7 +18,8 @@ namespace enn{
   class eTanh;
   class eReLU;
   class eSoftmax;
-
+  class eDropout;
+  
   class eLoss;
   class eMeanSquareLoss;
   class eCrossEntropyLoss;
@@ -94,6 +95,24 @@ public:
   eMatrix* tmp_in;
   eMatrix* tmp_out;
   eMatrix* tmp_err;
+  eMatrix* forward(eMatrix *inp);
+  eMatrix* backward(eMatrix *err);
+  void     update(double learning_rate);
+  void     load(FILE* p);
+  void     save(FILE* p);
+};
+
+class enn::eDropout : public enn::eLayer{
+public:
+  eMatrix* tmp_in;
+  eMatrix* tmp_out;
+  eMatrix* tmp_err;
+  eMatrix* mask;
+  double   p;
+  double   alpha;
+  double   (*criteria)(double);
+  
+  eDropout(double p);
   eMatrix* forward(eMatrix *inp);
   eMatrix* backward(eMatrix *err);
   void     update(double learning_rate);
