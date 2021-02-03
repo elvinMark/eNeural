@@ -110,7 +110,6 @@ public:
   eMatrix* mask;
   double   p;
   double   alpha;
-  double   (*criteria)(double);
   
   eDropout(double p);
   eMatrix* forward(eMatrix *inp);
